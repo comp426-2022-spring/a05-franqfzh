@@ -27,23 +27,116 @@
   </head>
   <body>
     <nav>
-      <button id="homenav">Home</button>
-      <button id="singlenav">Flip one coin</button>
-      <button id="multinav">Flip multiple coins</button>
-      <button id="guessnav">Guess the result</button>
+      <button id="homenav" onclick="detectButton('home')">Home</button>
+      <button id="singlenav" onclick = "detectButton('single')">Flip one coin</button>
+      <button id="multinav" onclick = "detectButton('multi')">Flip multiple coins</button>
+      <button id="guessnav" onclick = "detectButton('guess')">Guess the result</button>
     </nav>
     <div id="home">
-      
+      <h1>Coin Flipping Game! :o</h1>
+      <p>Welcome to this simple coin-flipping website. Press the home button to return to this main page. If you want to flip one coin and see the result, click the "Flip one coin" button. If you'd like to flip multiple coins, click the "Flip multiple coins" button, enter your desired number of flips, and press the flip button. If you'd like to play a game, then click on the "Guess the result" button and try to guess what the next coin will be. Have fun!</p>
     </div>    
     <div id="single" class="hidden">
-      
+      <button id="coin">Flip?</button>
+		  <p id="active"></p>
+      <!-- A result paragraph-->
+		  <p>Result: <span id="result"></span></p>
+      <!-- An image of a US quarter (North Carolina variant) -->
+		  <img src="../assets/img/coin.png" id="quarter">
+
+		  <script >
+      // Event listener for whatever is being clicked 
+      	document.addEventListener("click", activeNow);
+      // Replace text in anything with "active" id
+			 function activeNow() {
+			 	const active_now = document.activeElement
+			 	document.getElementById("active").innerHTML = active_now;
+			 	console.log(active_now)
+			 }
+      // Button coin flip element
+			  const coin = document.getElementById("coin")
+      // Add event listener for coin button
+        coin.addEventListener("click", flipCoin)
+        function flipCoin() {
+                  fetch('http://localhost:5000/app/flip/', {mode: 'cors'})
+            .then(function(response) {
+              return response.json();
+            })
+          .then(function(result) {
+            console.log(result);
+            document.getElementById("result").innerHTML = result.flip;
+            document.getElementById("quarter").setAttribute("src", result.flip+".jpg");
+            coin.disabled = true
+				})
+      	let flip = "FLIPPED"
+      	document.getElementById("coin").innerHTML = flip;
+      	console.log("Coin has been flipped. Result: "+ flip)
+			}
+		  </script>
     </div>
     <div id="multi" class="hidden">
-      
+      <div id="multi">
+        <h1>Flip many coins</h1>
+        <form id="coins">
+          <label for="number">
+            <strong>How many coins?</strong>
+          </label>
+          <input type="number" name="number" id="number">
+          <input type="submit" value="Flip 'em!">
+        </form>
+  
+        <h2>Results</h2>
+          <p id="heads"></p>
+          <p id="tails"></p>
+      </div>
+      <script>
+        // Our flip many coins form
+        const coins = document.getElementById("coins")
+        // Add event listener for coins form
+        coins.addEventListener("submit", flipCoins)
+        // Create the submit handler
+        async function flipCoins(event) {
+          event.preventDefault();
+          
+          const endpoint = "app/flip/coins/"
+          const url = document.baseURI+endpoint
+  
+          const formEvent = event.currentTarget
+  
+          try {
+            const formData = new FormData(formEvent);
+            const flips = await sendFlips({ url, formData });
+  
+            console.log(flips);
+            document.getElementById("heads").innerHTML = "Heads: "+flips.summary.heads;
+            document.getElementById("tails").innerHTML = "Tails: "+flips.summary.tails;
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        // Create a data sender
+        async function sendFlips({ url, formData }) {
+          const plainFormData = Object.fromEntries(formData.entries());
+          const formDataJson = JSON.stringify(plainFormData);
+          console.log(formDataJson);
+  
+          const options = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            },
+            body: formDataJson
+          };
+  
+          const response = await fetch(url, options);
+          return response.json()
+        }
+      </script>
     </div>
     <div id="guess" class="hidden">
       
     </div>
-	<script src="main.js"></script>
+	<script src="../main.js"></script>
   </body>
 </html>
