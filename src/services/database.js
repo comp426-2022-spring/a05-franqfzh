@@ -1,6 +1,7 @@
-import Database from 'better-sqlite3';
-
+// import Database from 'better-sqlite3';
+const Database = require('better-sqlite3');
 const db = new Database('log.db');
+
 
 const stmt = db.prepare(`
     SELECT name FROM sqlite_master WHERE type='table' and name='accesslog';`
@@ -29,5 +30,6 @@ if (row === undefined) {
     console.log('Database exists.')
 }
 // Export all of the above as a module so that we can use it elsewhere.
-export {db};
+//export {db};
+module.exports = db
 
