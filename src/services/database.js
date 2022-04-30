@@ -29,6 +29,5 @@ if (row === undefined) {
     console.log('Database exists.')
 }
 // Export all of the above as a module so that we can use it elsewhere.
-//export {db};
-module.exports = db
+export {db};
 
