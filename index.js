@@ -1,6 +1,7 @@
 // Place your server entry point code here
 import minimist from 'minimist';
-import express from 'express';
+// import express from 'express';
+const express = require('express');
 import fs from 'fs';
 import morgan from 'morgan';
 import {db} from './src/services/database.js';
