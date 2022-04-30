@@ -1,12 +1,12 @@
 // Place your server entry point code here
-// import minimist from 'minimist';
+import minimist from 'minimist';
 // // import express from 'express';
 // const express = require('express');
 // import fs from 'fs';
 // import morgan from 'morgan';
 // import {db} from './src/services/database.js';
 // import { coinFlip, coinFlips, countFlips, flipACoin } from './coin.mjs';
-const minimist = require('minimist');
+//const minimist = require('minimist');
 const express = require('express');
 const morgan = require('morgan');
 const db = require('./src/services/database.js');
